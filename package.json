@@ -1,0 +1,39 @@
+{
+  "name": "smartshield-replica",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SmartShield AI showcase — a fast, self-contained replica of the adaptive bot-mitigation platform (Next.js + React + TypeScript)",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.5.4",
+    "lucide-react": "^0.441.0",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.12.7",
+    "tailwind-merge": "^2.5.2",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.10",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.15",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
