@@ -65,7 +65,7 @@ export default function BlogLitePage() {
       <Section id="subscribe" className="pt-0">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 md:flex md:items-center md:justify-between md:gap-6">
           <div><h3 className="text-xl font-bold">The Morning Brief</h3><p className="text-sm text-slate-600">The five stories that matter, in your inbox by 7 am. Free, no spam.</p></div>
-          {subscribed ? <div className="mt-3 rounded-lg bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 md:mt-0">You're subscribed — check your inbox to confirm.</div> : <form onSubmit={(e) => { e.preventDefault(); setSubscribed(true); }} className="mt-3 flex gap-2 md:mt-0"><input className={cn(input, 'md:w-64')} type="email" placeholder="you@example.com" required /><button type="submit" className="shrink-0 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white">Subscribe</button></form>}
+          {subscribed ? <div className="mt-3 rounded-lg bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800 md:mt-0">You&apos;re subscribed — check your inbox to confirm.</div> : <form onSubmit={(e) => { e.preventDefault(); setSubscribed(true); }} className="mt-3 flex gap-2 md:mt-0"><input className={cn(input, 'md:w-64')} type="email" placeholder="you@example.com" required /><button type="submit" className="shrink-0 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white">Subscribe</button></form>}
         </div>
       </Section>
     </SiteShell>

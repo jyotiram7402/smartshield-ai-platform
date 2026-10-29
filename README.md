@@ -29,12 +29,15 @@ npm run dev        # http://localhost:3100
 
 ## Deploy to Vercel
 
-1. Push the repository to GitHub.
-2. In Vercel: **Add New → Project → Import** the repo.
-3. Set **Root Directory** to `smartshield-replica` (Framework preset: Next.js). Keep the
-   default build command (`next build`).
-4. Deploy. The app is static-first and renders in well under a second; the simulation
-   starts in the visitor's browser.
+1. Push this repository to GitHub.
+2. In Vercel: **Add New → Project → Import** the repo (Framework preset: Next.js is
+   detected automatically). Keep the default build command (`next build`) and the
+   default **Root Directory** — only when deploying from the full SmartShield monorepo
+   set Root Directory to `smartshield-replica`.
+3. (Optional) add the two Supabase environment variables below under
+   **Settings → Environment Variables**.
+4. Deploy. Every push to `main` redeploys automatically. The app is static-first and
+   renders in well under a second; the simulation starts in the visitor's browser.
 
 ## Supabase (optional)
 

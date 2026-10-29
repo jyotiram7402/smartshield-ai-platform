@@ -21,7 +21,7 @@ export default function SitesPage() {
             [ToggleLeft, '2 · Shield OFF, attack via SHIELD', 'Switch the shield off in the top bar and send the same attack through the gateway. A plain reverse proxy forwards everything — the site still goes down.', 'text-cyber-amber'],
             [ShieldCheck, '3 · Shield ON, attack via SHIELD', 'Switch the shield back on. The AI engine scores every request; bots are blocked, challenged or rate-limited before the origin — the card stays green and the traffic chart fills with red and amber.', 'text-cyber-lime'],
           ].map(([Icon, t, d, tone]) => {
-            const I = Icon as typeof ShieldCheck;
+            const I = Icon as unknown as typeof ShieldCheck;
             return (
               <div key={String(t)} className="rounded-xl border border-border/60 bg-muted/20 p-4">
                 <div className={`mb-2 flex items-center gap-2 text-sm font-semibold ${tone}`}><I className="h-4 w-4" />{String(t)}</div>

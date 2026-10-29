@@ -148,7 +148,7 @@ export default function EnginePage() {
             </div>
             <div className="flex flex-wrap gap-3">
               {[['Accept header', accept, setAccept], ['Accept-Encoding', enc, setEnc], ['Referrer', referer, setReferer], ['Cookie', cookie, setCookie], ['Challenge token', solved, setSolved]].map(([l, v, set]) => (
-                <label key={String(l)} className="inline-flex items-center gap-1.5"><input type="checkbox" checked={v as boolean} onChange={(e) => (set as (b: boolean) => void)(e.target.checked)} className="accent-primary" />{String(l)}</label>
+                <label key={String(l)} className="inline-flex items-center gap-1.5"><input type="checkbox" checked={v as boolean} onChange={(e) => (set as unknown as (b: boolean) => void)(e.target.checked)} className="accent-primary" />{String(l)}</label>
               ))}
             </div>
             <Button onClick={run}><Play className="h-4 w-4" /> Run inference</Button>

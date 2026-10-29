@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TrafficChart } from '@/components/charts/traffic-chart';
 import { AlertFeed } from '@/components/dashboard/alert-feed';
+import { IncidentHistory } from '@/components/dashboard/incident-history';
 import { ATTACK_LIBRARY } from '@/lib/engine/traffic';
 import type { AttackKind, Route, SiteId } from '@/lib/engine/types';
 import { useSim } from '@/lib/store';
@@ -144,6 +145,8 @@ export default function SimulatorPage() {
         <Card className="lg:col-span-2"><CardHeader><CardTitle>Gateway decisions</CardTitle><CardDescription>Watch the chart fill with blocks and challenges when an attack runs through the shield</CardDescription></CardHeader><CardContent><TrafficChart /></CardContent></Card>
         <Card><CardHeader><CardTitle>Alerts</CardTitle></CardHeader><CardContent><AlertFeed limit={6} /></CardContent></Card>
       </div>
+
+      <IncidentHistory />
     </>
   );
 }

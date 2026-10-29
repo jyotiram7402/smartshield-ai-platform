@@ -87,7 +87,7 @@ export default function NorthBoltPage() {
       <Section id="products" title="Products for every goal">
         <div className="grid gap-4 md:grid-cols-4">
           {[['Savings account', 'Zero-balance savings with 3.50% interest and free UPI.', Landmark], ['Fixed deposits', 'Lock in up to 7.10% p.a. with flexible tenures.', Lock], ['Home loans', 'From 8.35% p.a. with doorstep documentation.', ArrowRight], ['Credit cards', 'Up to 5% cashback on fuel, groceries and travel.', Zap]].map(([t, d, I]) => {
-            const Icon = I as typeof Landmark;
+            const Icon = I as unknown as typeof Landmark;
             return <div key={String(t)} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"><span className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-900"><Icon className="h-5 w-5" /></span><h3 className="mt-3 font-bold">{String(t)}</h3><p className="mt-1 text-sm text-slate-500">{String(d)}</p><a href="#accounts" className="mt-3 inline-block text-sm font-semibold text-blue-800">Learn more →</a></div>;
           })}
         </div>
