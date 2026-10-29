@@ -1,4 +1,16 @@
-import type { Features, RawRequest } from './types';
+import type { Features, RawRequest, UaClass } from './types';
+
+const KNOWN_BOT = /(bot|spider|crawl|wget|curl|python-requests|axios|scrapy|httpclient|headless|semrush|ahrefs|go-http-client|okhttp|java\/|nmap|masscan)/i;
+const SUSPECT_BOT = /(libwww|requests|perl|php\/|ruby)/i;
+
+/** User-agent classification — the same rules the gateway applies. */
+export function classifyUa(ua: string): UaClass {
+  if (!ua) return 'unknown';
+  if (KNOWN_BOT.test(ua)) return 'bot-known';
+  if (SUSPECT_BOT.test(ua)) return 'bot-suspect';
+  if (/Mozilla\/|Chrome\/|Safari\/|Firefox\//i.test(ua)) return 'human';
+  return 'bot-suspect';
+}
 
 export interface SessionInfo {
   rate: number; // requests in the last 60 s

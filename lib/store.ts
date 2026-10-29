@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { Simulation } from '@/lib/engine/simulation';
 import { DEFAULT_CONFIG } from '@/lib/engine/ensemble';
-import type { AttackKind, RawRequest, Route, ShieldConfig, SiteId, Snapshot, TrafficEvent } from '@/lib/engine/types';
+import type { AttackKind, Features, RawRequest, Route, ShieldConfig, SiteId, Snapshot, TrafficEvent } from '@/lib/engine/types';
 
 let sim: Simulation | null = null;
 function getSim() {
@@ -26,7 +26,7 @@ type Store = Snapshot & {
   setConfig: (patch: Partial<ShieldConfig>) => void;
   launchAttack: (o: { siteId: SiteId; kind: AttackKind; route: Route; intensity: number; durationSec: number }) => { ok: boolean; error?: string };
   stopAttack: (siteId: SiteId) => void;
-  scoreCustom: (req: RawRequest) => TrafficEvent;
+  scoreCustom: (req: RawRequest, overrides?: Partial<Features>) => TrafficEvent;
 };
 
 let unsubscribe: (() => void) | null = null;
@@ -43,7 +43,7 @@ export const useSim = create<Store>((set) => ({
   setConfig: (patch) => getSim().setConfig(patch),
   launchAttack: (o) => getSim().launchAttack(o),
   stopAttack: (id) => getSim().stopAttack(id),
-  scoreCustom: (req) => getSim().scoreCustom(req),
+  scoreCustom: (req, overrides) => getSim().scoreCustom(req, overrides),
 }));
 
 /** Keep the simulation alive across client-side navigation; start it once per page load. */

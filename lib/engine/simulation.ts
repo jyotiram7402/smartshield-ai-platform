@@ -4,7 +4,7 @@ import { SessionTracker, extractFeatures } from './features';
 import { DEFAULT_CONFIG, evaluate, classify } from './ensemble';
 import { HumanPopulation, attackRequests } from './traffic';
 import { OriginModel, SITE_DEFS } from './sites';
-import type { Alert, Attack, AttackKind, EngineInfo, IpProfile, Metrics, RawRequest, Route, ShieldConfig, SiteId, Snapshot, TimePoint, TrafficEvent } from './types';
+import type { Alert, Attack, AttackKind, EngineInfo, Features, IpProfile, Metrics, RawRequest, Route, ShieldConfig, SiteId, Snapshot, TimePoint, TrafficEvent } from './types';
 
 const TICK_MS = 250;
 const MAX_EVENTS = 300;
@@ -98,10 +98,10 @@ export class Simulation {
     this.pushAlert('info', `Attack stopped: ${this.origins.get(siteId)!.state.name}`, this.describeStats(a));
     this.emit();
   }
-  /** Score an arbitrary request from the "Try the engine" form. */
-  scoreCustom(req: RawRequest): TrafficEvent {
+  /** Score an arbitrary request from the "Try the engine" form (optional feature overrides). */
+  scoreCustom(req: RawRequest, overrides?: Partial<Features>): TrafficEvent {
     const session = this.tracker.track(req.ip, req.ts, req.path);
-    const f = extractFeatures(req, session);
+    const f: Features = { ...extractFeatures(req, session), ...(overrides || {}) };
     const d = evaluate(req, f, session, this.cfg);
     return { id: req.id, ts: req.ts, ip: req.ip, country: countryForIp(req.ip), ua: req.ua, uaClass: req.uaClass, method: req.method, path: req.path, siteId: req.siteId, route: 'shield', kind: req.kind, features: f, decision: d, reachedOrigin: d.action === 'allow', status: d.action === 'block' ? 403 : d.action === 'challenge' ? 202 : 200, latencyMs: 0 };
   }
