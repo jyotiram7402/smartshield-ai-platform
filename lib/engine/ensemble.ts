@@ -32,15 +32,36 @@ function fuse(models: ModelScore[], cfg: ShieldConfig) {
   return Number(score.toFixed(4));
 }
 
+/** Human-readable value of a feature for the explanation (falls back to the model's own rendering). */
+function featureValue(f: Features, feature: string, fallback: string) {
+  const raw = (f as unknown as Record<string, unknown>)[feature];
+  if (raw === undefined) return fallback;
+  if (feature === 'session_age_ms') return `${(Number(raw) / 1000).toFixed(1)} s`;
+  if (feature === 'content_length') return `${raw} B`;
+  if (typeof raw === 'boolean') return raw ? 'yes' : 'no';
+  if (typeof raw === 'number') return Number.isInteger(raw) ? String(raw) : raw.toFixed(2);
+  return String(raw);
+}
+
 function explain(f: Features, models: ModelScore[], score: number, action: Action, cfg: ShieldConfig): string[] {
   const out: string[] = [];
-  const top = models.flatMap((m) => m.contributions.map((x) => ({ ...x, model: m.label })))
-    .filter((x) => x.impact > 0.04)
-    .sort((a, b) => b.impact - a.impact)
-    .slice(0, 3);
-  for (const t of top) {
-    const label = (FEATURE_LABELS as Record<string, string>)[t.feature] || t.feature.replace(/_/g, ' ');
-    out.push(`${label} = ${t.value} raised risk by +${t.impact.toFixed(2)} (${t.model}).`);
+  // Each model reports its contributions in its own score units; weight them into
+  // fused-score units and merge the same feature across models, so "+0.37" means
+  // "this feature accounts for 0.37 of the final risk score".
+  const byFeature = new Map<string, { value: string; impact: number; models: string[] }>();
+  for (const m of models) {
+    for (const x of m.contributions) {
+      if (x.impact <= 0) continue;
+      const cur = byFeature.get(x.feature) || { value: featureValue(f, x.feature, x.value), impact: 0, models: [] };
+      cur.impact += x.impact * m.weight;
+      cur.models.push(m.label);
+      byFeature.set(x.feature, cur);
+    }
+  }
+  const top = [...byFeature.entries()].filter(([, x]) => x.impact >= 0.04).sort((a, b) => b[1].impact - a[1].impact).slice(0, 3);
+  for (const [feature, t] of top) {
+    const label = (FEATURE_LABELS as Record<string, string>)[feature] || feature.replace(/_/g, ' ');
+    out.push(`${label} = ${t.value} raised risk by +${t.impact.toFixed(2)} (${t.models.join(', ')}).`);
   }
   if (f.challenge_solved) out.push('A valid challenge token lowered risk by 0.30 — this client proved it runs JavaScript.');
   const strongest = [...models].sort((a, b) => b.score - a.score)[0];

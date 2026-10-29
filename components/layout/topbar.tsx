@@ -11,6 +11,7 @@ const TITLES: Record<string, [string, string]> = {
   '/dashboard': ['Overview', 'Live view of everything passing through the gateway'],
   '/dashboard/traffic': ['Traffic & IP intelligence', 'Every address the gateway has seen, scored and classified'],
   '/dashboard/engine': ['AI engine', 'Feature extraction, the four models and how a verdict is reached'],
+  '/dashboard/how-it-works': ['How it works', 'How bots and their IPs are identified, filtered out, and only genuine visitors reach the site'],
   '/dashboard/sites': ['Protected sites', 'Origin health and attack drills'],
   '/dashboard/simulator': ['Attack simulator', 'Launch controlled attacks and watch the shield respond'],
   '/dashboard/logs': ['Request log', 'Every decision, with its feature vector and model breakdown'],

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Brain, Crosshair, Globe2, LayoutDashboard, ScrollText, Server, Settings, ShieldCheck } from 'lucide-react';
+import { BookOpen, Brain, Crosshair, Globe2, LayoutDashboard, ScrollText, Server, Settings, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSim } from '@/lib/store';
 
@@ -10,6 +10,7 @@ export const NAV = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/traffic', label: 'Traffic & IPs', icon: Globe2 },
   { href: '/dashboard/engine', label: 'AI Engine', icon: Brain },
+  { href: '/dashboard/how-it-works', label: 'How it works', icon: BookOpen },
   { href: '/dashboard/sites', label: 'Protected Sites', icon: Server },
   { href: '/dashboard/simulator', label: 'Attack Simulator', icon: Crosshair },
   { href: '/dashboard/logs', label: 'Request Log', icon: ScrollText },

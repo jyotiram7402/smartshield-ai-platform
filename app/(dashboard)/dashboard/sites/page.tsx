@@ -17,7 +17,7 @@ export default function SitesPage() {
         <CardHeader><CardTitle>How to run the demo</CardTitle><CardDescription>Three steps that show why the shield matters — each origin is a separate process with a capacity of 25 req/s</CardDescription></CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3">
           {[
-            [ShieldOff, '1 · Attack DIRECT', 'Traffic bypasses the gateway and hits the raw origin port. Within ~2 s the health probe returns 503 and the card turns red — real visitors get "Service unavailable". Stop the attack and it recovers in ~2 s.', 'text-cyber-red'],
+            [ShieldOff, '1 · Attack DIRECT', 'Traffic bypasses the gateway and hits the raw origin port. The first request the origin cannot serve flips it to DOWN: the card turns red and real visitors get "Service unavailable" (open the Direct link in another tab to watch it). Stop the attack and it is back within about a second.', 'text-cyber-red'],
             [ToggleLeft, '2 · Shield OFF, attack via SHIELD', 'Switch the shield off in the top bar and send the same attack through the gateway. A plain reverse proxy forwards everything — the site still goes down.', 'text-cyber-amber'],
             [ShieldCheck, '3 · Shield ON, attack via SHIELD', 'Switch the shield back on. The AI engine scores every request; bots are blocked, challenged or rate-limited before the origin — the card stays green and the traffic chart fills with red and amber.', 'text-cyber-lime'],
           ].map(([Icon, t, d, tone]) => {
