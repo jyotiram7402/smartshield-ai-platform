@@ -60,6 +60,9 @@ export function scoreIF(f: Features, req: RawRequest): ModelScore {
   const raw = rateTerm + headerTerm + uaTerm + lenTerm;
   let s = 1 - Math.exp(-raw);
   s = clamp(s + jitter(req.id + 'if', 0.03), 0.02, 0.98);
+  // express the terms in score units so the contributions add up to the score
+  const k = raw > 0 ? s / raw : 0;
+  for (const x of contributions) x.impact = Number((x.impact * k).toFixed(3));
   return { model: 'if', label: 'Isolation Forest', score: s, weight: 0, contributions, note: `avg path length ${(8 - s * 6).toFixed(1)} (256 samples)`, latencyMs: lat(req.id + 'if', 0.8, 0.9) };
 }
 
@@ -79,6 +82,9 @@ export function scoreAE(f: Features, req: RawRequest): ModelScore {
   }
   let s = 1 - Math.exp(-err * 1.1);
   s = clamp(s + jitter(req.id + 'ae', 0.03), 0.02, 0.98);
+  // express the per-feature errors in score units so the contributions add up to the score
+  const k = err > 0 ? s / err : 0;
+  for (const x of contributions) x.impact = Number((x.impact * k).toFixed(3));
   return { model: 'ae', label: 'Autoencoder', score: s, weight: 0, contributions, note: `reconstruction error ${err.toFixed(3)} (threshold 0.35)`, latencyMs: lat(req.id + 'ae', 2.4, 2.2) };
 }
 

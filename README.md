@@ -87,8 +87,12 @@ The service-role key is only ever used server-side (route handler); RLS stays en
 3. **AI Engine** — engine status, model cards, the live inference trace, then *Score a
    request yourself* (switch the user-agent from Chrome to `python-requests`, raise the
    rate, remove the cookie — watch the four scores and the verdict change).
-4. **Protected Sites** — on NorthBolt Bank click **Attack DIRECT** → DOWN in ~2 s; open
-   the *Direct* link → the bank's 503 page. Stop → UP in ~2 s. Switch the shield OFF in
+   **How it works** — the six-stage flow with live counts, a genuine visitor and a bot
+   scored side by side, the live funnel, how bot IPs earn a *malicious* reputation,
+   what each model looks for, and the common questions.
+4. **Protected Sites** — open the *Direct* link of NorthBolt Bank in a second tab, then
+   click **Attack DIRECT** → the bank tab shows its 503 page at once (the first shed
+   request flips the origin to DOWN). Stop → UP within about a second. Switch the shield OFF in
    the top bar, **Attack via SHIELD** → still DOWN. Shield ON, **Attack via SHIELD** →
    stays UP while the chart fills with blocks/challenges; open the *Via SmartShield*
    link → the bank works, with the "served through SmartShield" banner.
@@ -102,7 +106,7 @@ The service-role key is only ever used server-side (route handler); RLS stays en
 ```
 app/
   page.tsx                     landing page
-  (dashboard)/dashboard/…      overview, traffic, engine, sites, simulator, logs, settings
+  (dashboard)/dashboard/…      overview, traffic, engine, how-it-works, sites, simulator, logs, settings
   sites/{northbolt,tinyshop,bloglite,bookingmini}/   the four protected demo websites
   api/incidents/route.ts       optional Supabase persistence
 components/
@@ -117,6 +121,7 @@ lib/
                  traffic (humans + 6 attack kinds), sites (origin capacity model),
                  simulation (4 Hz tick loop, metrics, IP profiles, alerts)
   store.ts       Zustand store bound to the simulation
+  sync.ts        cross-tab sync of attack / shield commands (BroadcastChannel)
   incidents.ts   posts finished drills to /api/incidents
   supabase.ts    optional server-side client
 ```
@@ -133,9 +138,16 @@ Every synthetic request goes through the same pipeline as the gateway:
    (burstiness, regularity and path repetition over the client's last 8 requests).
 4. **Ensemble** — weighted fusion → risk 0–1 → `allow` < 0.55 ≤ `challenge` < 0.85 ≤
    `block`, each with per-feature contributions and plain-language explanations.
-5. **Origins** — each site serves 25 req/s (token bucket); excess is shed with `503`
-   and the health probe reports *overloaded* for 1.5 s → the dashboard shows DOWN.
+5. **Origins** — each site serves 25 req/s (token bucket with a 1.5 s burst allowance);
+   excess is shed with `503`. The origin is DOWN from the first shed request until
+   0.75 s after the last one, so a flood takes a site down within a tick and it is back
+   within about a second of the attack stopping.
 
 Performance: no external assets or fonts beyond Google Fonts, static pages, charts
 without animation, snapshots to React at 2 Hz. Everything is deterministic (seeded),
 so the demo looks the same every time.
+
+**Several tabs:** each tab runs its own copy of the simulation, but attack, stop and
+shield commands are shared between tabs of the same browser (BroadcastChannel). Open a
+protected site in one tab, launch an attack from the dashboard in another — the site
+goes down and recovers in lock-step. A tab opened mid-attack catches up immediately.
