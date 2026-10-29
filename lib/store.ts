@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { Simulation } from '@/lib/engine/simulation';
 import { DEFAULT_CONFIG } from '@/lib/engine/ensemble';
+import { trackIncidents } from '@/lib/incidents';
 import type { AttackKind, Features, RawRequest, Route, ShieldConfig, SiteId, Snapshot, TrafficEvent } from '@/lib/engine/types';
 
 let sim: Simulation | null = null;
@@ -36,7 +37,12 @@ export const useSim = create<Store>((set) => ({
   connected: false,
   start: () => {
     const s = getSim();
-    if (!unsubscribe) unsubscribe = s.subscribe((snap) => set({ ...snap, connected: true }));
+    if (!unsubscribe) {
+      unsubscribe = s.subscribe((snap) => {
+        set({ ...snap, connected: true });
+        trackIncidents(snap.attacks, (id) => snap.sites.find((x) => x.id === id)?.name || id, snap.config.enabled);
+      });
+    }
     s.start();
   },
   stop: () => getSim().stop(),
